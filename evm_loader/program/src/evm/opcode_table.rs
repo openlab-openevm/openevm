@@ -142,6 +142,7 @@ opcode_table![
 
         0x5C, TLOAD, Self::opcode_tload;
         0x5D, TSTORE, Self::opcode_tstore;
+        0x5E, MCOPY, Self::opcode_mcopy;
 
         0x5F, PUSH0, Self::opcode_push_0;
         0x60, PUSH1, Self::opcode_push_1;
