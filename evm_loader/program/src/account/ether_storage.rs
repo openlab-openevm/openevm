@@ -1,7 +1,7 @@
 use std::cell::{Ref, RefMut};
 use std::mem::size_of;
 
-use super::{AccountHeader, AccountsDB, NoHeader, ACCOUNT_PREFIX_LEN, TAG_STORAGE_CELL};
+use super::{AccountHeader, AccountsDB, NoHeader, ACCOUNT_PREFIX_LEN, TAG_EMPTY, TAG_STORAGE_CELL};
 use crate::error::Result;
 use ethnum::U256;
 use solana_program::{account_info::AccountInfo, pubkey::Pubkey, rent::Rent};
@@ -108,6 +108,11 @@ impl<'a> StorageCell<'a> {
         Ok(Self { account })
     }
 
+    #[must_use]
+    pub fn info(&self) -> &AccountInfo<'a> {
+        &self.account
+    }
+
     pub fn create(
         address: StorageCellAddress,
         allocate_cells: usize,
@@ -134,15 +139,18 @@ impl<'a> StorageCell<'a> {
             rent,
         )?;
 
-        super::set_tag(&crate::ID, cell_account, TAG_STORAGE_CELL, Header::VERSION)?;
+        Self::initialize(cell_account.clone(), &crate::ID)
+    }
+
+    pub fn initialize(account: AccountInfo<'a>, program_id: &Pubkey) -> Result<Self> {
+        super::validate_tag(program_id, &account, TAG_EMPTY)?;
+        super::set_tag(program_id, &account, TAG_STORAGE_CELL, Header::VERSION)?;
         {
-            let mut header = super::header_mut::<Header>(cell_account);
+            let mut header = super::header_mut::<Header>(&account);
             header.revision = 1;
         }
 
-        Ok(Self {
-            account: cell_account.clone(),
-        })
+        Ok(Self { account })
     }
 
     #[must_use]
