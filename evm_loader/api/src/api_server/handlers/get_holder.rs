@@ -1,3 +1,5 @@
+#![allow(clippy::future_not_send)]
+
 use crate::api_server::handlers::process_error;
 use crate::commands::get_holder as GetHolderCommand;
 use crate::{types::GetHolderRequest, NeonApiState};

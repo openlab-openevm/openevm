@@ -1,7 +1,8 @@
 #![deny(warnings)]
-#![deny(clippy::all, clippy::pedantic)]
+#![deny(clippy::all, clippy::pedantic, clippy::nursery)]
+#![allow(clippy::future_not_send)]
+#![allow(clippy::module_name_repetitions)]
 
-#[allow(clippy::module_name_repetitions)]
 mod build_info;
 mod config;
 mod logs;
@@ -209,7 +210,7 @@ async fn main() {
     log::info!("execution time: {} sec", execution_time.as_secs_f64());
     print_result(&result);
     if let Err(e) = result {
-        std::process::exit(e.error_code());
+        std::process::exit(e.error_code().try_into().unwrap());
     };
 }
 

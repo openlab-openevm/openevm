@@ -1,3 +1,5 @@
+#![allow(clippy::future_not_send)]
+
 use crate::api_server::handlers::process_error;
 use crate::{types::GetStorageAtRequest, NeonApiState};
 use actix_request_identifier::RequestId;

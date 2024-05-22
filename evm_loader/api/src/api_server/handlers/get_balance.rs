@@ -1,3 +1,5 @@
+#![allow(clippy::future_not_send)]
+
 use crate::api_server::handlers::process_error;
 use crate::commands::get_balance as GetBalanceCommand;
 use crate::{types::GetBalanceRequest, NeonApiState};

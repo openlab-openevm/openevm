@@ -1,3 +1,5 @@
+#![allow(clippy::future_not_send)]
+
 use actix_request_identifier::RequestId;
 use actix_web::{http::StatusCode, post, web::Json, Responder};
 use neon_lib::tracing::tracers::TracerTypeEnum;
