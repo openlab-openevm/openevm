@@ -1,3 +1,5 @@
+use std::cell::RefCell;
+
 use ethnum::{AsU256, U256};
 use maybe_async::maybe_async;
 use solana_program::instruction::Instruction;
@@ -11,7 +13,9 @@ use crate::evm::database::Database;
 use crate::evm::Context;
 use crate::types::{Address, Vector};
 
+use super::block_params::BlockParams;
 use super::precompile_extension::PrecompiledContracts;
+use super::state::TimestampedContracts;
 use super::OwnedAccountInfo;
 
 enum Action {
@@ -24,6 +28,8 @@ enum Action {
 
 pub struct SyncedExecutorState<'a, B: AccountStorage> {
     pub backend: &'a mut B,
+    pub block_params: Option<BlockParams>,
+    pub timestamped_contracts: RefCell<TimestampedContracts>,
     actions: Vector<Action>,
     stack: Vector<usize>,
 }
@@ -35,6 +41,8 @@ impl<'a, B: SyncedAccountStorage> SyncedExecutorState<'a, B> {
             backend,
             actions: Vector::with_capacity_in(64, acc_allocator()),
             stack: Vector::with_capacity_in(16, acc_allocator()),
+            block_params: None,
+            timestamped_contracts: RefCell::new(TimestampedContracts::new()),
         }
     }
 
@@ -219,11 +227,25 @@ impl<'a, B: SyncedAccountStorage> Database for SyncedExecutorState<'a, B> {
         Ok(self.backend.block_hash(number).await)
     }
 
-    fn block_number(&self) -> Result<U256> {
+    fn block_number(&self, current_contract: Address) -> Result<U256> {
+        let mut timestamped_contracts = self.timestamped_contracts.borrow_mut();
+        timestamped_contracts.insert_if_not_exists(current_contract, ());
+
+        if let Some(block) = self.block_params {
+            return Ok(block.number);
+        }
+
         Ok(self.backend.block_number())
     }
 
-    fn block_timestamp(&self) -> Result<U256> {
+    fn block_timestamp(&self, current_contract: Address) -> Result<U256> {
+        let mut timestamped_contracts = self.timestamped_contracts.borrow_mut();
+        timestamped_contracts.insert_if_not_exists(current_contract, ());
+
+        if let Some(block) = self.block_params {
+            return Ok(block.timestamp);
+        }
+
         Ok(self.backend.block_timestamp())
     }
 

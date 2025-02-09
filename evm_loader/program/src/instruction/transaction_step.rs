@@ -41,7 +41,7 @@ pub fn do_begin<'a>(
     allocate_evm(&mut account_storage, &mut storage)?;
     let mut state_data = storage.read_executor_state();
 
-    let (_, touched_accounts) = state_data.deconstruct();
+    let (_, touched_accounts, timestamped_contracts) = state_data.deconstruct();
     finalize(
         0,
         storage,
@@ -49,6 +49,7 @@ pub fn do_begin<'a>(
         None,
         gasometer,
         touched_accounts,
+        timestamped_contracts,
     )
 }
 
@@ -87,7 +88,7 @@ pub fn do_continue<'a>(
         steps_executed = steps_returned;
     }
 
-    let (mut results, touched_accounts) = state_data.deconstruct();
+    let (mut results, touched_accounts, timestamped_contracts) = state_data.deconstruct();
     if steps_executed > EVM_STEPS_LAST_ITERATION_MAX {
         results = None;
     }
@@ -99,5 +100,6 @@ pub fn do_continue<'a>(
         results,
         gasometer,
         touched_accounts,
+        timestamped_contracts,
     )
 }
