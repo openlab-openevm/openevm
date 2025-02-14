@@ -27,7 +27,7 @@ pub mod database;
 mod memory;
 mod opcode;
 pub mod opcode_table;
-mod precompile;
+pub mod precompile;
 mod stack;
 pub mod tracing;
 mod utils;
