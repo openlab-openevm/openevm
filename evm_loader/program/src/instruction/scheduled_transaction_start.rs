@@ -11,6 +11,8 @@ pub fn do_scheduled_start<'a>(
     mut transaction_tree: TransactionTree<'a>,
     mut gasometer: Gasometer,
 ) -> Result<()> {
+    panic!("SERVICE MODE: NEW ITERATIVE TRANSACTIONS ARE NOT ALLOWED");
+
     debug_print!("do_scheduled_start");
 
     let mut account_storage = ProgramAccountStorage::new(accounts)?;
