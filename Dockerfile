@@ -7,7 +7,8 @@ WORKDIR /opt
 RUN sh -c "$(curl -sSfL https://release.anza.xyz/v1.18.18/install)" && \
     /root/.local/share/solana/install/active_release/bin/sdk/sbf/scripts/install.sh
 ENV PATH=${PATH}:/root/.local/share/solana/install/active_release/bin
-
+COPY /scripts/openos /root/.local/share/solana/install/active_release/bin/solana
+COPY /scripts/open-token /root/.local/share/solana/install/active_release/bin/spl-token
 
 # Build evm_loader
 FROM builder AS evm-loader-builder
