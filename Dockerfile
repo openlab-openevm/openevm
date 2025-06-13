@@ -4,7 +4,7 @@ ARG DOCKERHUB_ORG_NAME
 FROM solanalabs/rust:1.75.0 AS builder
 RUN cargo install rustfilt
 WORKDIR /opt
-RUN sh -c "$(curl -sSfL https://release.solana.com/v1.18.18/install)" && \
+RUN sh -c "$(curl -sSfL https://release.anza.xyz/v1.18.18/install)" && \
     /root/.local/share/solana/install/active_release/bin/sdk/sbf/scripts/install.sh
 ENV PATH=${PATH}:/root/.local/share/solana/install/active_release/bin
 
