@@ -20,7 +20,7 @@ fi
 function createAccount() {
   declare i=${1}
   echo "$(date "+%F %X.%3N") I ${FILENAME}:${LINENO} $$ ${COMPONENT}:CreateTestAcc {} Creating test account-$i"
-    ID_FILE="$HOME/.config/solana/id"
+    ID_FILE="$HOME/.config/openos/id"
     if [ "${i}" -gt "1" ]; then
       ID_FILE="${ID_FILE}${i}.json"
     else
