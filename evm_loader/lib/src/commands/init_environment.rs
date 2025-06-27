@@ -31,7 +31,7 @@ use {
         system_instruction, system_program,
     },
     spl_associated_token_account::get_associated_token_address,
-    spl_token::{self, native_mint},
+    spl_token_2022::{self, native_mint},
     std::collections::HashMap,
     std::path::Path,
     thiserror::Error,
@@ -155,20 +155,21 @@ pub async fn execute(
         let mint_signer = keys
             .get(&mint)
             .ok_or(EnvironmentError::MissingPrivateKey(mint))?;
-        let data_len = spl_token::state::Mint::LEN;
+        let data_len = spl_token_2022::state::Mint::LEN;
         let lamports = client
             .get_minimum_balance_for_rent_exemption(data_len)
             .await?;
+        
         let parameters = &[
             system_instruction::create_account(
                 &executor_clone.fee_payer.pubkey(),
                 &mint,
                 lamports,
                 data_len as u64,
-                &spl_token::id(),
+                &spl_token_2022::id(),
             ),
-            spl_token::instruction::initialize_mint2(
-                &spl_token::id(),
+            spl_token_2022::instruction::initialize_mint2(
+                &spl_token_2022::id(),
                 &mint,
                 &signer.pubkey(),
                 None,
@@ -187,7 +188,7 @@ pub async fn execute(
         .check_and_create_object(
             "NEON-token mint",
             executor
-                .get_account_data_pack::<spl_token::state::Mint>(&spl_token::id(), &neon_token_mint)
+                .get_account_data_pack::<spl_token_2022::state::Mint>(&spl_token_2022::id(), &neon_token_mint)
                 .await,
             |mint| async move {
                 if mint.decimals != neon_token_mint_decimals {
@@ -212,7 +213,7 @@ pub async fn execute(
             .check_and_create_object(
                 "Token pool account",
                 executor
-                    .get_account_data_pack::<spl_token::state::Account>(&spl_token::id(), &pool)
+                    .get_account_data_pack::<spl_token_2022::state::Account>(&spl_token_2022::id(), &pool)
                     .await,
                 |account| async move {
                     if account.mint != chain.token || account.owner != deposit_authority {
@@ -228,7 +229,7 @@ pub async fn execute(
                             &executor.fee_payer.pubkey(),
                             &deposit_authority,
                             &chain.token,
-                            &spl_token::id(),
+                            &spl_token_2022::id(),
                         ),
                     ])
                     .await?;
@@ -266,7 +267,7 @@ pub async fn execute(
                                 AccountMeta::new(main_balance_address, false),
                                 AccountMeta::new_readonly(program_data_address, false),
                                 AccountMeta::new_readonly(signer.pubkey(), true),
-                                AccountMeta::new_readonly(spl_token::id(), false),
+                                AccountMeta::new_readonly(spl_token_2022::id(), false),
                                 AccountMeta::new_readonly(system_program::id(), false),
                                 AccountMeta::new_readonly(native_mint::id(), false),
                                 AccountMeta::new(executor.fee_payer.pubkey(), true),
