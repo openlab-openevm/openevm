@@ -41,7 +41,9 @@ linked_list_allocator = { version = "0.10", default-features = false }
 evm-loader-macro = { path = "../program-macro" }
 solana-program.workspace = true
 spl-token = { version = "~4.0", default-features = false, features = ["no-entrypoint"] }
-spl-associated-token-account = { version = "~2.3", default-features = false, features = ["no-entrypoint"] }
+spl-token-2022 = { path = "../program-2022", default-features = false, features = ["no-entrypoint"] }
+#spl-associated-token-account = { version = "~2.3", default-features = false, features = ["no-entrypoint"] }
+spl-associated-token-account = { path = "../associated-token-account", default-features = false, features = ["no-entrypoint"] }
 mpl-token-metadata = { version = "~4.1", default-features = false }
 thiserror = "1.0"
 arrayref = "0.3.8"
