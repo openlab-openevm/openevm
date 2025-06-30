@@ -184,6 +184,10 @@ pub async fn execute(
 
     let neon_token_mint: Pubkey = program_parameters.get("NEON_TOKEN_MINT")?;
     let neon_token_mint_decimals = 9;
+    info!(
+        "--neon_token_mint:{}",
+        neon_token_mint
+    );
     executor
         .check_and_create_object(
             "NEON-token mint",
@@ -195,6 +199,10 @@ pub async fn execute(
                     error!("Invalid token decimals");
                     return Err(EnvironmentError::IncorrectTokenDecimals.into());
                 }
+                info!(
+                    "--mint:{}",
+                    mint.decimals
+                );
                 Ok(None)
             },
             || create_token(neon_token_mint, neon_token_mint_decimals),
@@ -207,8 +215,13 @@ pub async fn execute(
     let (deposit_authority, _) = Pubkey::find_program_address(&[b"Deposit"], &config.evm_loader);
     let chains = super::get_config::read_chains(client, config.evm_loader).await?;
     for chain in chains {
+        info!(
+            "wallet_address:{}, mint_address:{}",
+            deposit_authority,
+            chain.token
+        );
         let pool = get_associated_token_address(&deposit_authority, &chain.token);
-
+        info!("pool ata: {}",  pool);
         executor
             .check_and_create_object(
                 "Token pool account",

@@ -80,11 +80,13 @@ impl<'a, 'b> TransactionExecutor<'a, 'b> {
         owner_program_id: &Pubkey,
         account_key: &Pubkey,
     ) -> Result<Option<T>, NeonError> {
-        if let Some(account_info) = self.get_account(account_key).await? {
+        if let Some(account_info) = self.get_account(account_key).await? {            
             if account_info.data.is_empty() {
+                info!("--account_info.data is empty..");
                 return Err(NeonError::AccountNotFound(*account_key));
             }
             if account_info.owner != *owner_program_id {
+                info!("--account_info.ower:{}", account_info.owner);
                 return Err(NeonError::IncorrectProgram(account_info.owner));
             }
 
@@ -94,6 +96,7 @@ impl<'a, 'b> TransactionExecutor<'a, 'b> {
             }
             Ok(Some(account))
         } else {
+            info!("--not find account:{}", account_key);
             Ok(None)
         }
     }

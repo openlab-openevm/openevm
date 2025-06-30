@@ -40,7 +40,7 @@ pub fn get_associated_token_address(
     get_associated_token_address_with_program_id(
         wallet_address,
         token_mint_address,
-        &spl_token::id(),
+        &spl_token_2022::id(),
     )
 }
 
