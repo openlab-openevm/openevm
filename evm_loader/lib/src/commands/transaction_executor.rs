@@ -3,10 +3,7 @@ use std::future::Future;
 
 use serde::{Deserialize, Serialize};
 use solana_client::nonblocking::rpc_client::RpcClient;
-use spl_token_2022::{
-    state::{Mint},
-    extension::{StateWithExtensions}
-};
+use spl_token_2022::{extension::StateWithExtensions, state::Mint};
 
 use {
     crate::errors::NeonError,
@@ -84,7 +81,7 @@ impl<'a, 'b> TransactionExecutor<'a, 'b> {
         owner_program_id: &Pubkey,
         account_key: &Pubkey,
     ) -> Result<Option<Mint>, NeonError> {
-        if let Some(account_info) = self.get_account(account_key).await? {                        
+        if let Some(account_info) = self.get_account(account_key).await? {
             if account_info.data.is_empty() {
                 return Err(NeonError::AccountNotFound(*account_key));
             }
@@ -98,14 +95,15 @@ impl<'a, 'b> TransactionExecutor<'a, 'b> {
                 return Err(NeonError::AccountNotFound(*account_key));
             }
             Ok(Some(account))*/
-            let mint_with_extensions: StateWithExtensions<Mint> = StateWithExtensions::unpack(&account_info.data)
-                .map_err(|_| NeonError::AccountNotFound(*account_key))?;
+            let mint_with_extensions: StateWithExtensions<Mint> =
+                StateWithExtensions::unpack(&account_info.data)
+                    .map_err(|_| NeonError::AccountNotFound(*account_key))?;
 
             if !mint_with_extensions.base.is_initialized() {
                 info!("--mint account not initialized");
                 return Err(NeonError::AccountNotFound(*account_key));
             }
-            let mint : Mint = mint_with_extensions.base;
+            let mint: Mint = mint_with_extensions.base;
             info!("--successfully parsed Mint:");
             Ok(Some(mint))
         } else {
@@ -118,7 +116,7 @@ impl<'a, 'b> TransactionExecutor<'a, 'b> {
         owner_program_id: &Pubkey,
         account_key: &Pubkey,
     ) -> Result<Option<spl_token_2022::state::Account>, NeonError> {
-        if let Some(account_info) = self.get_account(account_key).await? {                        
+        if let Some(account_info) = self.get_account(account_key).await? {
             if account_info.data.is_empty() {
                 return Err(NeonError::AccountNotFound(*account_key));
             }
@@ -132,14 +130,15 @@ impl<'a, 'b> TransactionExecutor<'a, 'b> {
                 return Err(NeonError::AccountNotFound(*account_key));
             }
             Ok(Some(account))*/
-            let mint_with_extensions: StateWithExtensions<spl_token_2022::state::Account> = StateWithExtensions::unpack(&account_info.data)
-                .map_err(|_| NeonError::AccountNotFound(*account_key))?;
+            let mint_with_extensions: StateWithExtensions<spl_token_2022::state::Account> =
+                StateWithExtensions::unpack(&account_info.data)
+                    .map_err(|_| NeonError::AccountNotFound(*account_key))?;
 
             if !mint_with_extensions.base.is_initialized() {
                 info!("--mint account not initialized");
                 return Err(NeonError::AccountNotFound(*account_key));
             }
-            let account : spl_token_2022::state::Account = mint_with_extensions.base;
+            let account: spl_token_2022::state::Account = mint_with_extensions.base;
             info!("--successfully parsed account:");
             Ok(Some(account))
         } else {

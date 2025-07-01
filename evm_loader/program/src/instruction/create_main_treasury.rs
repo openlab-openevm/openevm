@@ -91,7 +91,7 @@ pub fn process<'a>(
             *accounts.system_program.key,
             system_program::id(),
         ));
-    }    
+    }
     if *accounts.token_program.key != spl_token_2022::id() {
         return Err(Error::AccountInvalidKey(
             *accounts.token_program.key,
@@ -119,7 +119,12 @@ pub fn process<'a>(
         spl_token_2022::state::Account::LEN,
         &Rent::get()?,
     )?;
-    log_msg!("--create_account...{:?}:{:?}:{:?}", accounts.main_treasury, accounts.mint,accounts.program_upgrade_auth);
+    log_msg!(
+        "--create_account...{:?}:{:?}:{:?}",
+        accounts.main_treasury,
+        accounts.mint,
+        accounts.program_upgrade_auth
+    );
     accounts.token_program.create_account(
         accounts.main_treasury,
         accounts.mint,

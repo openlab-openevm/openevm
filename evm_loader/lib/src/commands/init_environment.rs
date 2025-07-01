@@ -159,7 +159,7 @@ pub async fn execute(
         let lamports = client
             .get_minimum_balance_for_rent_exemption(data_len)
             .await?;
-        
+
         let parameters = &[
             system_instruction::create_account(
                 &executor_clone.fee_payer.pubkey(),
@@ -184,15 +184,15 @@ pub async fn execute(
 
     let neon_token_mint: Pubkey = program_parameters.get("NEON_TOKEN_MINT")?;
     let neon_token_mint_decimals = 9;
-    info!(
-        "--neon_token_mint:{}",
-        neon_token_mint
-    );
+    info!("--neon_token_mint:{}", neon_token_mint);
     executor
         .check_and_create_object(
             "NEON-token mint",
             executor
-                .get_account_data_pack_mint::<spl_token_2022::state::Mint>(&spl_token_2022::id(), &neon_token_mint)
+                .get_account_data_pack_mint::<spl_token_2022::state::Mint>(
+                    &spl_token_2022::id(),
+                    &neon_token_mint,
+                )
                 .await,
             |mint| async move {
                 if mint.decimals != neon_token_mint_decimals {
@@ -213,16 +213,18 @@ pub async fn execute(
     for chain in chains {
         info!(
             "wallet_address:{}, mint_address:{}",
-            deposit_authority,
-            chain.token
+            deposit_authority, chain.token
         );
         let pool = get_associated_token_address(&deposit_authority, &chain.token);
-        info!("pool ata: {}",  pool);
+        info!("pool ata: {}", pool);
         executor
             .check_and_create_object(
                 "Token pool account",
                 executor
-                    .get_account_data_pack_account::<spl_token_2022::state::Account>(&spl_token_2022::id(), &pool)
+                    .get_account_data_pack_account::<spl_token_2022::state::Account>(
+                        &spl_token_2022::id(),
+                        &pool,
+                    )
                     .await,
                 |account| async move {
                     if account.mint != chain.token || account.owner != deposit_authority {
@@ -258,10 +260,7 @@ pub async fn execute(
         return Err(EnvironmentError::TreasuryPoolSeedMismatch.into());
     }
     let main_balance_address = MainTreasury::address(&config.evm_loader).0;
-    info!(
-        "--main_balance_address:{}",
-        main_balance_address
-    );
+    info!("--main_balance_address:{}", main_balance_address);
     executor
         .check_and_create_object(
             "Main treasury pool",
