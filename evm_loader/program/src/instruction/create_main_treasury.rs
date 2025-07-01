@@ -74,32 +74,28 @@ pub fn process<'a>(
 
     let accounts = Accounts::from_slice(accounts)?;
     let (expected_key, bump_seed) = MainTreasury::address(program_id);
-
     if *accounts.main_treasury.key != expected_key {
         return Err(Error::AccountInvalidKey(
             *accounts.main_treasury.key,
             expected_key,
         ));
     }
-
-    if *accounts.mint.key != spl_token::native_mint::id() {
+    if *accounts.mint.key != spl_token_2022::native_mint::id() {
         return Err(Error::Custom(std::format!(
             "Account {} - not wrapped SOL mint",
             accounts.mint.key
         )));
     }
-
     if *accounts.system_program.key != system_program::id() {
         return Err(Error::AccountInvalidKey(
             *accounts.system_program.key,
             system_program::id(),
         ));
-    }
-
-    if *accounts.token_program.key != spl_token::id() {
+    }    
+    if *accounts.token_program.key != spl_token_2022::id() {
         return Err(Error::AccountInvalidKey(
             *accounts.token_program.key,
-            spl_token::id(),
+            spl_token_2022::id(),
         ));
     }
 
@@ -114,21 +110,22 @@ pub fn process<'a>(
     if !accounts.program_upgrade_auth.is_signer {
         return Err(Error::AccountNotSigner(*accounts.program_upgrade_auth.key));
     }
-
+    log_msg!("--create_pda_account...");
     accounts.system_program.create_pda_account(
-        &spl_token::id(),
+        &spl_token_2022::id(),
         &accounts.payer,
         accounts.main_treasury,
         &[TREASURY_POOL_SEED.as_bytes(), &[bump_seed]],
-        spl_token::state::Account::LEN,
+        spl_token_2022::state::Account::LEN,
         &Rent::get()?,
     )?;
-
+    log_msg!("--create_account...{:?}:{:?}:{:?}", accounts.main_treasury, accounts.mint,accounts.program_upgrade_auth);
     accounts.token_program.create_account(
         accounts.main_treasury,
         accounts.mint,
         accounts.program_upgrade_auth,
     )?;
+    log_msg!("--ok...");
 
     Ok(())
 }

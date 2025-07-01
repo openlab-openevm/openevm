@@ -192,17 +192,13 @@ pub async fn execute(
         .check_and_create_object(
             "NEON-token mint",
             executor
-                .get_account_data_pack::<spl_token_2022::state::Mint>(&spl_token_2022::id(), &neon_token_mint)
+                .get_account_data_pack_mint::<spl_token_2022::state::Mint>(&spl_token_2022::id(), &neon_token_mint)
                 .await,
             |mint| async move {
                 if mint.decimals != neon_token_mint_decimals {
                     error!("Invalid token decimals");
                     return Err(EnvironmentError::IncorrectTokenDecimals.into());
                 }
-                info!(
-                    "--mint:{}",
-                    mint.decimals
-                );
                 Ok(None)
             },
             || create_token(neon_token_mint, neon_token_mint_decimals),
@@ -226,7 +222,7 @@ pub async fn execute(
             .check_and_create_object(
                 "Token pool account",
                 executor
-                    .get_account_data_pack::<spl_token_2022::state::Account>(&spl_token_2022::id(), &pool)
+                    .get_account_data_pack_account::<spl_token_2022::state::Account>(&spl_token_2022::id(), &pool)
                     .await,
                 |account| async move {
                     if account.mint != chain.token || account.owner != deposit_authority {
@@ -262,6 +258,10 @@ pub async fn execute(
         return Err(EnvironmentError::TreasuryPoolSeedMismatch.into());
     }
     let main_balance_address = MainTreasury::address(&config.evm_loader).0;
+    info!(
+        "--main_balance_address:{}",
+        main_balance_address
+    );
     executor
         .check_and_create_object(
             "Main treasury pool",
@@ -271,6 +271,10 @@ pub async fn execute(
                 if program_upgrade_authority != Some(signer.pubkey()) {
                     return Err(EnvironmentError::IncorrectProgramAuthority.into());
                 }
+                info!(
+                    "--begin to create main_balance_address:{} program_data_address:{}, system_program_id:{}, native_mint_id:{}", 
+                    main_balance_address, program_data_address, system_program::id(), native_mint::id()
+                );
                 let transaction = executor
                     .create_transaction(
                         &[Instruction::new_with_bincode(

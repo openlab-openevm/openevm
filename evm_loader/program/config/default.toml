@@ -1,4 +1,4 @@
-program_id = "Evm8pTZbiKSiBbNTRCtLVBLZypqmosD8M2Wg2qfoqnA2"
+program_id = "Ev2bfMCoKEMSDDEntAfPPggCdzGJY4EkX6FodAGMvU6w"
 
 no_update_tracking_owners = [
     "HEvSKofvBgfaexv23kMabbYqxasxU3mQ4ibBMEmJWHny",  # Chainlink oracle
@@ -12,8 +12,8 @@ operators_whitelist = [
 
 [chain.neon]
 id = 285022928
-token = "NeoZdcprg7VfhSmqjNw4sg4ckDSGsm3avp8J24QHCkP"
+token = "1ST1Rvm6xt175cS2AWGnYg3wmfrYoEnDyFZpAJLtrtR"
 
 [chain.sol]
 id = 285022927
-token = "So11111111111111111111111111111111111111112"
+token = "So1vA3R7sv9PCakSvFVn4Tz36ae8ZxR8VqeTQRobbXb"

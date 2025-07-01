@@ -3,6 +3,10 @@ use std::future::Future;
 
 use serde::{Deserialize, Serialize};
 use solana_client::nonblocking::rpc_client::RpcClient;
+use spl_token_2022::{
+    state::{Mint},
+    extension::{StateWithExtensions}
+};
 
 use {
     crate::errors::NeonError,
@@ -75,28 +79,70 @@ impl<'a, 'b> TransactionExecutor<'a, 'b> {
         Ok(account_info)
     }
 
-    pub async fn get_account_data_pack<T: Pack + IsInitialized>(
+    pub async fn get_account_data_pack_mint<T: Pack + IsInitialized>(
         &self,
         owner_program_id: &Pubkey,
         account_key: &Pubkey,
-    ) -> Result<Option<T>, NeonError> {
-        if let Some(account_info) = self.get_account(account_key).await? {            
+    ) -> Result<Option<Mint>, NeonError> {
+        if let Some(account_info) = self.get_account(account_key).await? {                        
             if account_info.data.is_empty() {
-                info!("--account_info.data is empty..");
                 return Err(NeonError::AccountNotFound(*account_key));
             }
             if account_info.owner != *owner_program_id {
-                info!("--account_info.ower:{}", account_info.owner);
                 return Err(NeonError::IncorrectProgram(account_info.owner));
             }
+            info!("--account_info.ower:{}", account_info.owner);
 
-            let account: T = T::unpack(&account_info.data)?;
+            /*let account: T = T::unpack(&account_info.data)?;
             if !account.is_initialized() {
                 return Err(NeonError::AccountNotFound(*account_key));
             }
+            Ok(Some(account))*/
+            let mint_with_extensions: StateWithExtensions<Mint> = StateWithExtensions::unpack(&account_info.data)
+                .map_err(|_| NeonError::AccountNotFound(*account_key))?;
+
+            if !mint_with_extensions.base.is_initialized() {
+                info!("--mint account not initialized");
+                return Err(NeonError::AccountNotFound(*account_key));
+            }
+            let mint : Mint = mint_with_extensions.base;
+            info!("--successfully parsed Mint:");
+            Ok(Some(mint))
+        } else {
+            Ok(None)
+        }
+    }
+
+    pub async fn get_account_data_pack_account<T: Pack + IsInitialized>(
+        &self,
+        owner_program_id: &Pubkey,
+        account_key: &Pubkey,
+    ) -> Result<Option<spl_token_2022::state::Account>, NeonError> {
+        if let Some(account_info) = self.get_account(account_key).await? {                        
+            if account_info.data.is_empty() {
+                return Err(NeonError::AccountNotFound(*account_key));
+            }
+            if account_info.owner != *owner_program_id {
+                return Err(NeonError::IncorrectProgram(account_info.owner));
+            }
+            info!("--account_info.ower:{}", account_info.owner);
+
+            /*let account: T = T::unpack(&account_info.data)?;
+            if !account.is_initialized() {
+                return Err(NeonError::AccountNotFound(*account_key));
+            }
+            Ok(Some(account))*/
+            let mint_with_extensions: StateWithExtensions<spl_token_2022::state::Account> = StateWithExtensions::unpack(&account_info.data)
+                .map_err(|_| NeonError::AccountNotFound(*account_key))?;
+
+            if !mint_with_extensions.base.is_initialized() {
+                info!("--mint account not initialized");
+                return Err(NeonError::AccountNotFound(*account_key));
+            }
+            let account : spl_token_2022::state::Account = mint_with_extensions.base;
+            info!("--successfully parsed account:");
             Ok(Some(account))
         } else {
-            info!("--not find account:{}", account_key);
             Ok(None)
         }
     }

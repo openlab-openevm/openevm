@@ -257,8 +257,8 @@ pub struct Token<'a>(&'a AccountInfo<'a>);
 
 impl<'a> Token<'a> {
     pub fn from_account(info: &'a AccountInfo<'a>) -> Result<Self> {
-        if !spl_token::check_id(info.key) {
-            return Err(Error::AccountInvalidKey(*info.key, spl_token::ID));
+        if !spl_token_2022::check_id(info.key) {
+            return Err(Error::AccountInvalidKey(*info.key, spl_token_2022::ID));
         }
 
         Ok(Self(info))
@@ -271,7 +271,7 @@ impl<'a> Token<'a> {
         owner: &AccountInfo<'a>,
     ) -> Result<()> {
         invoke_unchecked(
-            &spl_token::instruction::initialize_account3(
+            &spl_token_2022::instruction::initialize_account3(
                 self.0.key,
                 account.key,
                 mint.key,
