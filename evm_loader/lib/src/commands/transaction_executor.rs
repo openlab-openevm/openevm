@@ -81,6 +81,7 @@ impl<'a, 'b> TransactionExecutor<'a, 'b> {
         owner_program_id: &Pubkey,
         account_key: &Pubkey,
     ) -> Result<Option<Mint>, NeonError> {
+        info!("Using type: {}", std::any::type_name::<T>());
         if let Some(account_info) = self.get_account(account_key).await? {
             if account_info.data.is_empty() {
                 return Err(NeonError::AccountNotFound(*account_key));
@@ -116,6 +117,7 @@ impl<'a, 'b> TransactionExecutor<'a, 'b> {
         owner_program_id: &Pubkey,
         account_key: &Pubkey,
     ) -> Result<Option<spl_token_2022::state::Account>, NeonError> {
+        info!("Using type: {}", std::any::type_name::<T>());
         if let Some(account_info) = self.get_account(account_key).await? {
             if account_info.data.is_empty() {
                 return Err(NeonError::AccountNotFound(*account_key));
