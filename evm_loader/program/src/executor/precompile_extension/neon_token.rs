@@ -113,7 +113,7 @@ async fn withdraw<State: Database>(
         use spl_associated_token_account::instruction::create_associated_token_account;
 
         let create_associated =
-            create_associated_token_account(&FAKE_OPERATOR, &target, &mint_address, &spl_token::ID);
+            create_associated_token_account(&FAKE_OPERATOR, &target, &mint_address, &spl_token_2022::ID);
 
         state
             .queue_external_instruction(create_associated, vector![], true)
@@ -124,7 +124,7 @@ async fn withdraw<State: Database>(
     let pool = get_associated_token_address(&authority, &mint_address);
 
     let transfer = spl_token::instruction::transfer_checked(
-        &spl_token::ID,
+        &spl_token_2022::ID,
         &pool,
         &mint_address,
         &target_token,

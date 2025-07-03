@@ -31,7 +31,7 @@ pub fn emulate(
         })
         .collect();
     
-    // spl_token::processor::Processor::process(&spl_token::ID, &instruction_accounts, instruction)
+    // spl_token::processor::Processor::process(&spl_token_2022::ID, &instruction_accounts, instruction)
     let instruction = TokenInstruction::unpack(instruction)?;
 
     match instruction {
@@ -42,13 +42,13 @@ pub fn emulate(
             spl_token::processor::Processor::process_initialize_mint2(&instruction_accounts, decimals, mint_authority, freeze_authority)
         }
         TokenInstruction::InitializeAccount => {
-            spl_token::processor::Processor::process_initialize_account(&spl_token::ID, &instruction_accounts)
+            spl_token::processor::Processor::process_initialize_account(&spl_token_2022::ID, &instruction_accounts)
         }
         TokenInstruction::InitializeAccount2 { owner } => {
-            spl_token::processor::Processor::process_initialize_account2(&spl_token::ID, &instruction_accounts, owner)
+            spl_token::processor::Processor::process_initialize_account2(&spl_token_2022::ID, &instruction_accounts, owner)
         }
         TokenInstruction::InitializeAccount3 { owner } => {
-            spl_token::processor::Processor::process_initialize_account3(&spl_token::ID, &instruction_accounts, owner)
+            spl_token::processor::Processor::process_initialize_account3(&spl_token_2022::ID, &instruction_accounts, owner)
         }
         TokenInstruction::InitializeMultisig { m } => {
             spl_token::processor::Processor::process_initialize_multisig(&instruction_accounts, m)
@@ -57,46 +57,46 @@ pub fn emulate(
             spl_token::processor::Processor::process_initialize_multisig2(&instruction_accounts, m)
         }
         TokenInstruction::Transfer { amount } => {
-            spl_token::processor::Processor::process_transfer(&spl_token::ID, &instruction_accounts, amount, None)
+            spl_token::processor::Processor::process_transfer(&spl_token_2022::ID, &instruction_accounts, amount, None)
         }
         TokenInstruction::Approve { amount } => {
-            spl_token::processor::Processor::process_approve(&spl_token::ID, &instruction_accounts, amount, None)
+            spl_token::processor::Processor::process_approve(&spl_token_2022::ID, &instruction_accounts, amount, None)
         }
         TokenInstruction::Revoke => {
-            spl_token::processor::Processor::process_revoke(&spl_token::ID, &instruction_accounts)
+            spl_token::processor::Processor::process_revoke(&spl_token_2022::ID, &instruction_accounts)
         }
         TokenInstruction::SetAuthority { authority_type, new_authority } => {
-            spl_token::processor::Processor::process_set_authority(&spl_token::ID, &instruction_accounts, authority_type, new_authority)
+            spl_token::processor::Processor::process_set_authority(&spl_token_2022::ID, &instruction_accounts, authority_type, new_authority)
         }
         TokenInstruction::MintTo { amount } => {
-            spl_token::processor::Processor::process_mint_to(&spl_token::ID, &instruction_accounts, amount, None)
+            spl_token::processor::Processor::process_mint_to(&spl_token_2022::ID, &instruction_accounts, amount, None)
         }
         TokenInstruction::Burn { amount } => {
-            spl_token::processor::Processor::process_burn(&spl_token::ID, &instruction_accounts, amount, None)
+            spl_token::processor::Processor::process_burn(&spl_token_2022::ID, &instruction_accounts, amount, None)
         }
         TokenInstruction::CloseAccount => {
-            spl_token::processor::Processor::process_close_account(&spl_token::ID, &instruction_accounts)
+            spl_token::processor::Processor::process_close_account(&spl_token_2022::ID, &instruction_accounts)
         }
         TokenInstruction::FreezeAccount => {
-            spl_token::processor::Processor::process_toggle_freeze_account(&spl_token::ID, &instruction_accounts, true)
+            spl_token::processor::Processor::process_toggle_freeze_account(&spl_token_2022::ID, &instruction_accounts, true)
         }
         TokenInstruction::ThawAccount => {
-            spl_token::processor::Processor::process_toggle_freeze_account(&spl_token::ID, &instruction_accounts, false)
+            spl_token::processor::Processor::process_toggle_freeze_account(&spl_token_2022::ID, &instruction_accounts, false)
         }
         TokenInstruction::TransferChecked { amount, decimals } => {
-            spl_token::processor::Processor::process_transfer(&spl_token::ID, &instruction_accounts, amount, Some(decimals))
+            spl_token::processor::Processor::process_transfer(&spl_token_2022::ID, &instruction_accounts, amount, Some(decimals))
         }
         TokenInstruction::ApproveChecked { amount, decimals } => {
-            spl_token::processor::Processor::process_approve(&spl_token::ID, &instruction_accounts, amount, Some(decimals))
+            spl_token::processor::Processor::process_approve(&spl_token_2022::ID, &instruction_accounts, amount, Some(decimals))
         }
         TokenInstruction::MintToChecked { amount, decimals } => {
-            spl_token::processor::Processor::process_mint_to(&spl_token::ID, &instruction_accounts, amount, Some(decimals))
+            spl_token::processor::Processor::process_mint_to(&spl_token_2022::ID, &instruction_accounts, amount, Some(decimals))
         }
         TokenInstruction::BurnChecked { amount, decimals } => {
-            spl_token::processor::Processor::process_burn(&spl_token::ID, &instruction_accounts, amount, Some(decimals))
+            spl_token::processor::Processor::process_burn(&spl_token_2022::ID, &instruction_accounts, amount, Some(decimals))
         }
         TokenInstruction::SyncNative => {
-            spl_token::processor::Processor::process_sync_native(&spl_token::ID, &instruction_accounts)
+            spl_token::processor::Processor::process_sync_native(&spl_token_2022::ID, &instruction_accounts)
         }
         _ => {
             Err(ProgramError::InvalidInstructionData)

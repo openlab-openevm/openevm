@@ -106,7 +106,7 @@ pub fn create_associated_token_account(
             AccountMeta::new_readonly(*wallet_address, false),
             AccountMeta::new_readonly(*token_mint_address, false),
             AccountMeta::new_readonly(solana_program::system_program::id(), false),
-            AccountMeta::new_readonly(spl_token::id(), false),
+            AccountMeta::new_readonly(spl_token_2022::id(), false),
             AccountMeta::new_readonly(sysvar::rent::id(), false),
         ],
         data: vec![],

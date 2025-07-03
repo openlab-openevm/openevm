@@ -84,7 +84,7 @@ pub async fn execute(
         }
     }
     let mut message = Message::new(
-        &[sync_native(&spl_token::id(), &main_balance_address)?],
+        &[sync_native(&spl_token_2022::id(), &main_balance_address)?],
         Some(&signer.pubkey()),
     );
     let blockhash = rpc_client.get_latest_blockhash().await?;

@@ -301,13 +301,13 @@ async fn initialize_mint<State: Database>(
         state,
         &account,
         spl_token::state::Mint::LEN,
-        &spl_token::ID,
+        &spl_token_2022::ID,
         seeds,
     )
     .await?;
 
     let initialize_mint = spl_token::instruction::initialize_mint2(
-        &spl_token::ID,
+        &spl_token_2022::ID,
         &mint_key,
         &mint_authority.unwrap_or(signer_pubkey),
         Some(&freeze_authority.unwrap_or(signer_pubkey)),
@@ -358,13 +358,13 @@ async fn initialize_account<State: Database>(
         state,
         &account,
         spl_token::state::Account::LEN,
-        &spl_token::ID,
+        &spl_token_2022::ID,
         seeds,
     )
     .await?;
 
     let initialize_mint = spl_token::instruction::initialize_account3(
-        &spl_token::ID,
+        &spl_token_2022::ID,
         &account_key,
         &mint,
         &owner.unwrap_or(signer_pubkey),
@@ -392,7 +392,7 @@ async fn close_account<State: Database>(
     ];
 
     let close_account = spl_token::instruction::close_account(
-        &spl_token::ID,
+        &spl_token_2022::ID,
         &account,
         &FAKE_OPERATOR,
         &signer_pubkey,
@@ -423,7 +423,7 @@ async fn approve<State: Database>(
     ];
 
     let approve = spl_token::instruction::approve(
-        &spl_token::ID,
+        &spl_token_2022::ID,
         &source,
         &target,
         &signer_pubkey,
@@ -452,7 +452,7 @@ async fn revoke<State: Database>(
         vector![bump_seed],
     ];
 
-    let revoke = spl_token::instruction::revoke(&spl_token::ID, &account, &signer_pubkey, &[])?;
+    let revoke = spl_token::instruction::revoke(&spl_token_2022::ID, &account, &signer_pubkey, &[])?;
     state
         .queue_external_instruction(revoke, vector![seeds], true)
         .await?;
@@ -482,7 +482,7 @@ async fn transfer<State: Database>(
     ];
 
     let transfer = spl_token::instruction::transfer(
-        &spl_token::ID,
+        &spl_token_2022::ID,
         &source,
         &target,
         &signer_pubkey,
@@ -526,7 +526,7 @@ async fn transfer_with_seed<State: Database>(
     ];
 
     let transfer = spl_token::instruction::transfer(
-        &spl_token::ID,
+        &spl_token_2022::ID,
         &source,
         &target,
         &signer_pubkey,
@@ -562,7 +562,7 @@ async fn mint_to<State: Database>(
     ];
 
     let mint_to = spl_token::instruction::mint_to(
-        &spl_token::ID,
+        &spl_token_2022::ID,
         &mint,
         &target,
         &signer_pubkey,
@@ -599,7 +599,7 @@ async fn burn<State: Database>(
 
     #[rustfmt::skip]
     let burn = spl_token::instruction::burn(
-        &spl_token::ID,
+        &spl_token_2022::ID,
         &source,
         &mint,
         &signer_pubkey,
@@ -630,7 +630,7 @@ async fn freeze<State: Database>(
     ];
 
     let freeze = spl_token::instruction::freeze_account(
-        &spl_token::ID,
+        &spl_token_2022::ID,
         &target,
         &mint,
         &signer_pubkey,
@@ -661,7 +661,7 @@ async fn thaw<State: Database>(
 
     #[rustfmt::skip]
     let thaw = spl_token::instruction::thaw_account(
-        &spl_token::ID,
+        &spl_token_2022::ID,
         &target,
         &mint,
         &signer_pubkey,

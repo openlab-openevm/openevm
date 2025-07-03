@@ -55,7 +55,7 @@ pub fn emulate(
         }
 
         associated_token_account.lamports += required_lamports;
-        associated_token_account.owner = spl_token::ID;
+        associated_token_account.owner = spl_token_2022::ID;
         associated_token_account
             .data
             .resize(spl_token::state::Account::LEN, 0);
