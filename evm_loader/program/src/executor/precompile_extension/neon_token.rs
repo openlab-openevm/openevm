@@ -112,8 +112,12 @@ async fn withdraw<State: Database>(
     if !spl_token::check_id(&account.owner) {
         use spl_associated_token_account::instruction::create_associated_token_account;
 
-        let create_associated =
-            create_associated_token_account(&FAKE_OPERATOR, &target, &mint_address, &spl_token_2022::ID);
+        let create_associated = create_associated_token_account(
+            &FAKE_OPERATOR,
+            &target,
+            &mint_address,
+            &spl_token_2022::ID,
+        );
 
         state
             .queue_external_instruction(create_associated, vector![], true)

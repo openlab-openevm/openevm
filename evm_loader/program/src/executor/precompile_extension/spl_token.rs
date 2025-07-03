@@ -452,7 +452,8 @@ async fn revoke<State: Database>(
         vector![bump_seed],
     ];
 
-    let revoke = spl_token::instruction::revoke(&spl_token_2022::ID, &account, &signer_pubkey, &[])?;
+    let revoke =
+        spl_token::instruction::revoke(&spl_token_2022::ID, &account, &signer_pubkey, &[])?;
     state
         .queue_external_instruction(revoke, vector![seeds], true)
         .await?;
