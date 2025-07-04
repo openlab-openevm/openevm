@@ -45,6 +45,7 @@ pub fn process<'a>(
     log_msg!("Instruction: Deposit");
 
     let parsed_accounts = Accounts::from_slice(accounts)?;
+    log_msg!("parsed_accounts");
 
     let address = array_ref![instruction, 0, 20];
     let address = Address::from(*address);
@@ -53,6 +54,7 @@ pub fn process<'a>(
     let chain_id = u64::from_le_bytes(*chain_id);
 
     validate(program_id, &parsed_accounts, address, chain_id)?;
+    log_msg!("validated");
     execute(program_id, parsed_accounts, address, chain_id)
 }
 
@@ -120,8 +122,8 @@ fn execute(program_id: &Pubkey, accounts: Accounts, address: Address, chain_id: 
         &U256::from(chain_id).to_be_bytes(),
         &[bump_seed],
     ];
-
-    let instruction = spl_token::instruction::transfer(
+    log_msg!("begin execute..");
+    let instruction = spl_token_2022::instruction::transfer(
         accounts.token_program.key,
         accounts.source.info.key,
         accounts.pool.info.key,
@@ -129,7 +131,7 @@ fn execute(program_id: &Pubkey, accounts: Accounts, address: Address, chain_id: 
         &[],
         accounts.source.delegated_amount,
     )?;
-
+    log_msg!("transfered");
     let account_infos: &[AccountInfo] = &[
         accounts.source.info.clone(),
         accounts.pool.info.clone(),
@@ -138,7 +140,7 @@ fn execute(program_id: &Pubkey, accounts: Accounts, address: Address, chain_id: 
     ];
 
     invoke_signed(&instruction, account_infos, &[signer_seeds])?;
-
+    log_msg!("invoke_signed");
     let token_decimals = accounts.mint.decimals;
     assert!(token_decimals <= 18);
 
@@ -167,7 +169,7 @@ fn execute(program_id: &Pubkey, accounts: Accounts, address: Address, chain_id: 
     let mut balance_account = BalanceAccount::create(address, chain_id, &accounts_db, None, &rent)?;
     balance_account.increment_revision(&rent, &accounts_db)?;
     balance_account.mint(deposit)?;
-
+    log_msg!("balance_account mint");
     **accounts_db.operator().try_borrow_mut_lamports()? += excessive_lamports;
 
     Ok(())
