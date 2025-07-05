@@ -66,7 +66,7 @@ impl<'a> Holder<'a> {
         operator: &Operator,
     ) -> Result<Self> {
         if account.owner != program_id {
-            return Err(Error::AccountInvalidOwner(*account.key, *program_id));
+            return Err(Error::AccountInvalidOwner2(*account.key, *program_id, *account.owner));
         }
 
         let key = Pubkey::create_with_seed(operator.key, seed, program_id)?;

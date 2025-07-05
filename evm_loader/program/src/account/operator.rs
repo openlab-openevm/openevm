@@ -26,7 +26,7 @@ impl<'a> Operator<'a> {
     /// We trust whitelisted operators to not do this
     pub unsafe fn from_account_not_whitelisted(info: &'a AccountInfo<'a>) -> Result<Self> {
         if !system_program::check_id(info.owner) {
-            return Err(Error::AccountInvalidOwner(*info.key, system_program::ID));
+            return Err(Error::AccountInvalidOwner2(*info.key, system_program::ID, *info.owner));
         }
 
         if !info.is_signer {

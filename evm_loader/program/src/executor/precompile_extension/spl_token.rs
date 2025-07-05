@@ -286,7 +286,7 @@ async fn initialize_mint<State: Database>(
 
     let account = state.external_account(mint_key).await?;
     if !system_program::check_id(&account.owner) {
-        return Err(Error::AccountInvalidOwner(mint_key, system_program::ID));
+        return Err(Error::AccountInvalidOwner2(mint_key, system_program::ID, account.owner));
     }
 
     let seeds: Vector<Vector<u8>> = vector![

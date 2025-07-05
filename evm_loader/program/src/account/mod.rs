@@ -151,7 +151,7 @@ fn header_version(info: &AccountInfo) -> u8 {
 
 pub fn tag(program_id: &Pubkey, info: &AccountInfo) -> Result<u8> {
     if info.owner != program_id {
-        return Err(Error::AccountInvalidOwner(*info.key, *program_id));
+        return Err(Error::AccountInvalidOwner2(*info.key, *program_id, *info.owner));
     }
 
     let data = info.try_borrow_data()?;
