@@ -78,7 +78,7 @@ pub struct AccountMint<'a> {
 impl<'a> AccountMint<'a> {
     pub fn from_account(info: &'a AccountInfo<'a>) -> Result<Self> {
         if !spl_token_2022::check_id(info.owner) {
-            return Err(Error::AccountInvalidOwner(*info.key, spl_token_2022::ID));
+            return Err(Error::AccountInvalidOwner2(*info.key, spl_token_2022::ID, *info.owner));
         }
         let data = info.try_borrow_data()?;
         //let data = T::unpack(&data)?;
