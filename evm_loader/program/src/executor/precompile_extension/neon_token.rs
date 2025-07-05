@@ -109,7 +109,7 @@ async fn withdraw<State: Database>(
 
     let target_token = get_associated_token_address(&target, &mint_address);
     let account = state.external_account(target_token).await?;
-    if !spl_token::check_id(&account.owner) {
+    if !spl_token_2022::check_id(&account.owner) {
         use spl_associated_token_account::instruction::create_associated_token_account;
 
         let create_associated = create_associated_token_account(
@@ -127,7 +127,7 @@ async fn withdraw<State: Database>(
     let (authority, bump_seed) = Pubkey::find_program_address(&[b"Deposit"], state.program_id());
     let pool = get_associated_token_address(&authority, &mint_address);
 
-    let transfer = spl_token::instruction::transfer_checked(
+    let transfer = spl_token_2022::instruction::transfer_checked(
         &spl_token_2022::ID,
         &pool,
         &mint_address,
