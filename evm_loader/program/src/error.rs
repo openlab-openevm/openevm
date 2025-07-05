@@ -118,6 +118,9 @@ pub enum Error {
     #[error("Account {0} - invalid owner, expected {1}")]
     AccountInvalidOwner(Pubkey, Pubkey),
 
+    #[error("Account {0} - invalid owner, expected {1}, real {2}")]
+    AccountInvalidOwner2(Pubkey, Pubkey, Pubkey),
+
     #[error("Account {0} - invalid public key, expected {1}")]
     AccountInvalidKey(Pubkey, Pubkey),
 
