@@ -343,7 +343,7 @@ async fn initialize_account<State: Database>(
 
     let account = state.external_account(account_key).await?;
     if !system_program::check_id(&account.owner) {
-        return Err(Error::AccountInvalidOwner(account_key, system_program::ID));
+        return Err(Error::AccountInvalidOwner2(account_key, system_program::ID, account.owner));
     }
 
     let seeds: Vector<Vector<u8>> = vector![
