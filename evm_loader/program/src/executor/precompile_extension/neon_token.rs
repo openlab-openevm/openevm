@@ -77,16 +77,17 @@ async fn withdraw<State: Database>(
 ) -> Result<()> {
     if value == 0 {
         return Err(Error::Custom("Neon Withdraw: value == 0".to_string()));
-    }
+    }    
 
     let mint_address = state.chain_id_to_token(chain_id);
+    debug_print!("withdraw({})", mint_address);
 
     let mut mint_account = state.external_account(mint_address).await?;
     let mint_data = {
         let info = mint_account.into_account_info();
         token::Mint::from_account(&info)?.into_data()
     };
-
+    debug_print!("from_account finished.");
     assert!(mint_data.decimals < 18);
 
     let additional_decimals: u32 = (18 - mint_data.decimals).into();

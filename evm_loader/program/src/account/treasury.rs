@@ -65,7 +65,7 @@ impl<'a> MainTreasury<'a> {
         if *info.key != expected_key {
             return Err(Error::AccountInvalidKey(*info.key, expected_key));
         }
-
+        debug_print!("MainTreasury from_account begin.");
         if *info.owner != spl_token_2022::id() {
             //return Err(Error::AccountInvalidOwner(*info.key, spl_token_2022::id()));
             return Err(Error::AccountInvalidOwner2(*info.key, spl_token_2022::id(),*info.owner));
