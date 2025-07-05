@@ -12,7 +12,7 @@ use solana_sdk::{
     system_program,
     transaction::Transaction,
 };
-use spl_token::instruction::sync_native;
+use spl_token_2022::instruction::sync_native;
 use std::ops::Deref;
 
 #[derive(Debug, Serialize, Deserialize)]

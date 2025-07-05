@@ -306,7 +306,7 @@ async fn initialize_mint<State: Database>(
     )
     .await?;
 
-    let initialize_mint = spl_token::instruction::initialize_mint2(
+    let initialize_mint = spl_token_2022::instruction::initialize_mint2(
         &spl_token_2022::ID,
         &mint_key,
         &mint_authority.unwrap_or(signer_pubkey),
@@ -363,7 +363,7 @@ async fn initialize_account<State: Database>(
     )
     .await?;
 
-    let initialize_mint = spl_token::instruction::initialize_account3(
+    let initialize_mint = spl_token_2022::instruction::initialize_account3(
         &spl_token_2022::ID,
         &account_key,
         &mint,
@@ -391,7 +391,7 @@ async fn close_account<State: Database>(
         vector![bump_seed],
     ];
 
-    let close_account = spl_token::instruction::close_account(
+    let close_account = spl_token_2022::instruction::close_account(
         &spl_token_2022::ID,
         &account,
         &FAKE_OPERATOR,
@@ -422,7 +422,7 @@ async fn approve<State: Database>(
         vector![bump_seed],
     ];
 
-    let approve = spl_token::instruction::approve(
+    let approve = spl_token_2022::instruction::approve(
         &spl_token_2022::ID,
         &source,
         &target,
@@ -453,7 +453,7 @@ async fn revoke<State: Database>(
     ];
 
     let revoke =
-        spl_token::instruction::revoke(&spl_token_2022::ID, &account, &signer_pubkey, &[])?;
+        spl_token_2022::instruction::revoke(&spl_token_2022::ID, &account, &signer_pubkey, &[])?;
     state
         .queue_external_instruction(revoke, vector![seeds], true)
         .await?;
