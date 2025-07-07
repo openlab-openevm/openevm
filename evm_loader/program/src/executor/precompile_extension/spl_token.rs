@@ -14,7 +14,7 @@ use crate::{
     evm::database::Database,
     types::Address,
 };
-use spl_token_2022::{extension::StateWithExtensions};
+use spl_token_2022::extension::StateWithExtensions;
 
 use crate::vector;
 
@@ -287,7 +287,11 @@ async fn initialize_mint<State: Database>(
 
     let account = state.external_account(mint_key).await?;
     if !system_program::check_id(&account.owner) {
-        return Err(Error::AccountInvalidOwner2(mint_key, system_program::ID, account.owner));
+        return Err(Error::AccountInvalidOwner2(
+            mint_key,
+            system_program::ID,
+            account.owner,
+        ));
     }
 
     let seeds: Vector<Vector<u8>> = vector![
@@ -344,7 +348,11 @@ async fn initialize_account<State: Database>(
 
     let account = state.external_account(account_key).await?;
     if !system_program::check_id(&account.owner) {
-        return Err(Error::AccountInvalidOwner2(account_key, system_program::ID, account.owner));
+        return Err(Error::AccountInvalidOwner2(
+            account_key,
+            system_program::ID,
+            account.owner,
+        ));
     }
 
     let seeds: Vector<Vector<u8>> = vector![
@@ -725,8 +733,8 @@ async fn get_account<State: Database>(
         //spl_token::state::Account::unpack(&account.data)?
         let data = account.data;
         let data_with_extensions: StateWithExtensions<spl_token_2022::state::Account> =
-                StateWithExtensions::unpack(data.as_ref())
-                    .map_err(|_| Error::AccountMissing(_account))?;
+            StateWithExtensions::unpack(data.as_ref())
+                .map_err(|_| Error::AccountMissing(_account))?;
         let data: spl_token_2022::state::Account = data_with_extensions.base;
         data
     } else if system_program::check_id(&account.owner) {
@@ -766,8 +774,8 @@ async fn get_mint<State: Database>(
         //spl_token::state::Mint::unpack(&account.data)?
         let data = account.data;
         let data_with_extensions: StateWithExtensions<spl_token_2022::state::Mint> =
-                StateWithExtensions::unpack(data.as_ref())
-                    .map_err(|_| Error::AccountMissing(_account))?;
+            StateWithExtensions::unpack(data.as_ref())
+                .map_err(|_| Error::AccountMissing(_account))?;
         let data: spl_token_2022::state::Mint = data_with_extensions.base;
         data
     } else if system_program::check_id(&account.owner) {

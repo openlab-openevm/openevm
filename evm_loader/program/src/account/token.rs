@@ -1,8 +1,8 @@
 use crate::error::{Error, Result};
 use solana_program::account_info::AccountInfo;
 use solana_program::program_pack::{IsInitialized, Pack};
+use spl_token_2022::extension::StateWithExtensions;
 use std::ops::Deref;
-use spl_token_2022::{extension::StateWithExtensions};
 pub struct Account<'a, T: Pack + IsInitialized> {
     pub info: &'a AccountInfo<'a>,
     data: T,
@@ -11,7 +11,11 @@ pub struct Account<'a, T: Pack + IsInitialized> {
 impl<'a, T: Pack + IsInitialized> Account<'a, T> {
     pub fn from_account(info: &'a AccountInfo<'a>) -> Result<Self> {
         if !spl_token_2022::check_id(info.owner) {
-            return Err(Error::AccountInvalidOwner2(*info.key, spl_token_2022::ID, *info.owner));
+            return Err(Error::AccountInvalidOwner2(
+                *info.key,
+                spl_token_2022::ID,
+                *info.owner,
+            ));
         }
 
         let data = info.try_borrow_data()?;
@@ -41,13 +45,17 @@ pub struct AccountState<'a> {
 impl<'a> AccountState<'a> {
     pub fn from_account(info: &'a AccountInfo<'a>) -> Result<Self> {
         if !spl_token_2022::check_id(info.owner) {
-            return Err(Error::AccountInvalidOwner2(*info.key, spl_token_2022::ID, *info.owner));
+            return Err(Error::AccountInvalidOwner2(
+                *info.key,
+                spl_token_2022::ID,
+                *info.owner,
+            ));
         }
         let data = info.try_borrow_data()?;
         //let data = T::unpack(&data)?;
         let data_with_extensions: StateWithExtensions<spl_token_2022::state::Account> =
-                StateWithExtensions::unpack(data.as_ref())
-                    .map_err(|_| Error::AccountMissing(*info.key))?;
+            StateWithExtensions::unpack(data.as_ref())
+                .map_err(|_| Error::AccountMissing(*info.key))?;
 
         if !data_with_extensions.base.is_initialized() {
             return Err(Error::AccountMissing(*info.key));
@@ -78,13 +86,17 @@ pub struct AccountMint<'a> {
 impl<'a> AccountMint<'a> {
     pub fn from_account(info: &'a AccountInfo<'a>) -> Result<Self> {
         if !spl_token_2022::check_id(info.owner) {
-            return Err(Error::AccountInvalidOwner2(*info.key, spl_token_2022::ID, *info.owner));
+            return Err(Error::AccountInvalidOwner2(
+                *info.key,
+                spl_token_2022::ID,
+                *info.owner,
+            ));
         }
         let data = info.try_borrow_data()?;
         //let data = T::unpack(&data)?;
         let data_with_extensions: StateWithExtensions<spl_token_2022::state::Mint> =
-                StateWithExtensions::unpack(data.as_ref())
-                    .map_err(|_| Error::AccountMissing(*info.key))?;
+            StateWithExtensions::unpack(data.as_ref())
+                .map_err(|_| Error::AccountMissing(*info.key))?;
 
         if !data_with_extensions.base.is_initialized() {
             return Err(Error::AccountMissing(*info.key));

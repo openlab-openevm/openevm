@@ -68,7 +68,11 @@ impl<'a> MainTreasury<'a> {
         debug_print!("MainTreasury from_account begin.");
         if *info.owner != spl_token_2022::id() {
             //return Err(Error::AccountInvalidOwner(*info.key, spl_token_2022::id()));
-            return Err(Error::AccountInvalidOwner2(*info.key, spl_token_2022::id(),*info.owner));
+            return Err(Error::AccountInvalidOwner2(
+                *info.key,
+                spl_token_2022::id(),
+                *info.owner,
+            ));
         }
 
         let account = spl_token::state::Account::unpack(&info.data.borrow())?;

@@ -77,7 +77,7 @@ async fn withdraw<State: Database>(
 ) -> Result<()> {
     if value == 0 {
         return Err(Error::Custom("Neon Withdraw: value == 0".to_string()));
-    }    
+    }
 
     let mint_address = state.chain_id_to_token(chain_id);
     debug_print!("withdraw({})", mint_address);

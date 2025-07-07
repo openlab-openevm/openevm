@@ -129,7 +129,11 @@ impl<'a> ContractAccount<'a> {
                 system.transfer(operator, info, lamports)?;
             }
         } else {
-            return Err(Error::AccountInvalidOwner2(pubkey, system_program::ID, *info.owner));
+            return Err(Error::AccountInvalidOwner2(
+                pubkey,
+                system_program::ID,
+                *info.owner,
+            ));
         }
 
         if info.data_len() >= required_size {
