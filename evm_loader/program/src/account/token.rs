@@ -64,7 +64,8 @@ impl<'a> AccountState<'a> {
 
         Ok(Self { info, data })
     }
-
+    
+    #[must_use]
     pub fn into_data(self) -> spl_token_2022::state::Account {
         self.data
     }
@@ -106,6 +107,7 @@ impl<'a> AccountMint<'a> {
         Ok(Self { info, data })
     }
 
+    #[must_use]
     pub fn into_data(self) -> spl_token_2022::state::Mint {
         self.data
     }
