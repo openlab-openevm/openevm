@@ -14,6 +14,7 @@ use crate::{
     evm::database::Database,
     types::Address,
 };
+use spl_token_2022::{extension::StateWithExtensions};
 
 use crate::vector;
 
@@ -717,13 +718,19 @@ async fn is_system_account<State: Database>(
 async fn get_account<State: Database>(
     _context: &crate::evm::Context,
     state: &State,
-    account: Pubkey,
+    _account: Pubkey,
 ) -> Result<Vector<u8>> {
-    let account = state.external_account(account).await?;
-    let token = if spl_token::check_id(&account.owner) {
-        spl_token::state::Account::unpack(&account.data)?
+    let account = state.external_account(_account).await?;
+    let token = if spl_token_2022::check_id(&account.owner) {
+        //spl_token::state::Account::unpack(&account.data)?
+        let data = account.data;
+        let data_with_extensions: StateWithExtensions<spl_token_2022::state::Account> =
+                StateWithExtensions::unpack(data.as_ref())
+                    .map_err(|_| Error::AccountMissing(_account))?;
+        let data: spl_token_2022::state::Account = data_with_extensions.base;
+        data
     } else if system_program::check_id(&account.owner) {
-        spl_token::state::Account::default()
+        spl_token_2022::state::Account::default()
     } else {
         return Err(ProgramError::IllegalOwner.into());
     };
@@ -752,13 +759,19 @@ async fn get_account<State: Database>(
 async fn get_mint<State: Database>(
     _context: &crate::evm::Context,
     state: &State,
-    account: Pubkey,
+    _account: Pubkey,
 ) -> Result<Vector<u8>> {
-    let account = state.external_account(account).await?;
-    let mint = if spl_token::check_id(&account.owner) {
-        spl_token::state::Mint::unpack(&account.data)?
+    let account = state.external_account(_account).await?;
+    let mint = if spl_token_2022::check_id(&account.owner) {
+        //spl_token::state::Mint::unpack(&account.data)?
+        let data = account.data;
+        let data_with_extensions: StateWithExtensions<spl_token_2022::state::Mint> =
+                StateWithExtensions::unpack(data.as_ref())
+                    .map_err(|_| Error::AccountMissing(_account))?;
+        let data: spl_token_2022::state::Mint = data_with_extensions.base;
+        data
     } else if system_program::check_id(&account.owner) {
-        spl_token::state::Mint::default()
+        spl_token_2022::state::Mint::default()
     } else {
         return Err(ProgramError::IllegalOwner.into());
     };

@@ -521,7 +521,7 @@ impl<'a, B: AccountStorage> Database for ExecutorState<'a, B> {
                     program_id if solana_program::system_program::check_id(program_id) => {
                         crate::external_programs::system::emulate(data, meta, &mut accounts)?;
                     }
-                    program_id if spl_token::check_id(program_id) => {
+                    program_id if spl_token_2022::check_id(program_id) => {
                         crate::external_programs::spl_token::emulate(data, meta, &mut accounts)?;
                     }
                     program_id if spl_associated_token_account::check_id(program_id) => {
