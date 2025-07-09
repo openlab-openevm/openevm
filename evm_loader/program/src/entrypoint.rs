@@ -67,13 +67,13 @@ fn process_instruction<'a>(
     instruction_data: &[u8],
 ) -> ProgramResult {
     use crate::error::Error;
-
+    log_msg!("begin to check id.");
     assert!(crate::check_id(program_id));
-
+    log_msg!("split data.");
     let (tag, instruction) = instruction_data
         .split_first()
         .ok_or(ProgramError::InvalidInstructionData)?;
-
+    log_msg!("begin to parse data.");
     match EvmInstruction::parse(tag)? {
         EvmInstruction::HolderCreate => {
             instruction::account_holder_create::process(program_id, accounts, instruction)
