@@ -23,10 +23,9 @@ solana-accounts-db.workspace = true
 solana-bpf-loader-program.workspace = true
 solana-loader-v4-program.workspace = true
 solana-transaction-status.workspace = true
-spl-token = { version = "~4.0", default-features = false, features = ["no-entrypoint"] }
-spl-token-2022 = { path = "../program-2022", default-features = false, features = ["no-entrypoint"] }
-#spl-associated-token-account = { version = "~2.3", default-features = false, features = ["no-entrypoint"] }
-spl-associated-token-account = { path = "../associated-token-account", default-features = false, features = ["no-entrypoint"] }
+spl-token = { git = "https://github.com/openlab-openos/open-token", package="spl-token", default-features = false, features = ["no-entrypoint"] }
+spl-token-2022 = { git = "https://github.com/openlab-openos/open-token", package="spl-token-2022", default-features = false, features = ["no-entrypoint"] }
+spl-associated-token-account = { git = "https://github.com/openlab-openos/open-token", package="spl-associated-token-account", default-features = false, features = ["no-entrypoint"] }
 bs58 = "0.5.1"
 base64 = "0.22"
 hex = { version = "0.4", features = ["serde"] }
