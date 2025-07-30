@@ -12,19 +12,19 @@ members = [
 ]
 
 [workspace.dependencies]
-solana-clap-utils = "=1.18.18"
-solana-cli = "=1.18.18"
-solana-cli-config = "=1.18.18"
-solana-client = "=1.18.18"
-solana-account-decoder = "=1.18.18"
-solana-program = { version = "=1.18.18", default-features = false }
-solana-sdk = "=1.18.18"
-solana-program-runtime = "=1.18.18"
-solana-runtime = { version = "=1.18.18", features = ["dev-context-only-utils"] }
-solana-accounts-db = "=1.18.18"
-solana-bpf-loader-program = "=1.18.18"
-solana-loader-v4-program = "=1.18.18"
-solana-transaction-status = "=1.18.18"
+solana-clap-utils = {git = "https://github.com/openlab-openos/openos", package="solana-clap-utils"}
+solana-cli = {git = "https://github.com/openlab-openos/openos", package="solana-cli"}
+solana-cli-config = {git = "https://github.com/openlab-openos/openos", package="solana-cli-config"}
+solana-client = {git = "https://github.com/openlab-openos/openos", package="solana-client"}
+solana-account-decoder = {git = "https://github.com/openlab-openos/openos", package="solana-account-decoder"}
+solana-program = { git = "https://github.com/openlab-openos/openos", package="solana-program", default-features = false }
+solana-sdk = {git = "https://github.com/openlab-openos/openos", package="solana-sdk"}
+solana-program-runtime = {git = "https://github.com/openlab-openos/openos", package="solana-program-runtime"}
+solana-runtime = { git = "https://github.com/openlab-openos/openos", package="solana-runtime", features = ["dev-context-only-utils"] }
+solana-accounts-db = {git = "https://github.com/openlab-openos/openos", package="solana-accounts-db"}
+solana-bpf-loader-program = {git = "https://github.com/openlab-openos/openos", package="solana-bpf-loader-program"}
+solana-loader-v4-program = {git = "https://github.com/openlab-openos/openos", package="solana-loader-v4-program"}
+solana-transaction-status = {git = "https://github.com/openlab-openos/openos", package="solana-transaction-status"}
 
 [profile.test]
 debug = true
