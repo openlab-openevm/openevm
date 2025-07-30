@@ -12,7 +12,6 @@ use solana_program::{pubkey::Pubkey, system_instruction};
 use super::OwnedAccountInfo;
 
 mod call_solana;
-mod metaplex;
 mod neon_account;
 mod neon_token;
 mod query_account;
@@ -71,9 +70,6 @@ impl PrecompiledContracts {
             }
             Self::SYSTEM_ACCOUNT_SPL_TOKEN => {
                 Some(spl_token::spl_token(state, address, input, context, is_static).await)
-            }
-            Self::SYSTEM_ACCOUNT_METAPLEX => {
-                Some(metaplex::metaplex(state, address, input, context, is_static).await)
             }
             Self::SYSTEM_ACCOUNT_CALL_SOLANA => {
                 Some(call_solana::call_solana(state, address, input, context, is_static).await)

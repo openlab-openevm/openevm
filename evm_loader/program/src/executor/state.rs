@@ -9,7 +9,6 @@ use crate::evm::{Context, ExitStatus};
 use crate::types::Address;
 use ethnum::{AsU256, U256};
 use maybe_async::maybe_async;
-use mpl_token_metadata::programs::MPL_TOKEN_METADATA_ID;
 use solana_program::instruction::Instruction;
 use solana_program::pubkey::Pubkey;
 use solana_program::rent::Rent;
@@ -526,14 +525,6 @@ impl<'a, B: AccountStorage> Database for ExecutorState<'a, B> {
                     }
                     program_id if spl_associated_token_account::check_id(program_id) => {
                         crate::external_programs::spl_associated_token::emulate(
-                            data,
-                            meta,
-                            &mut accounts,
-                            self.rent(),
-                        )?;
-                    }
-                    program_id if &MPL_TOKEN_METADATA_ID == program_id => {
-                        crate::external_programs::metaplex::emulate(
                             data,
                             meta,
                             &mut accounts,

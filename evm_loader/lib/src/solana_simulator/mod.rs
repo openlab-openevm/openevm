@@ -10,7 +10,8 @@ use evm_loader::solana_program::loader_v4;
 use evm_loader::solana_program::loader_v4::{LoaderV4State, LoaderV4Status};
 use evm_loader::solana_program::message::SanitizedMessage;
 use log::debug;
-use solana_accounts_db::transaction_results::inner_instructions_list_from_instruction_trace;
+//use solana_accounts_db::transaction_results::inner_instructions_list_from_instruction_trace;
+use solana_accounts_db::accounts::construct_instructions_account_ex;
 use solana_bpf_loader_program::syscalls::create_program_runtime_environment_v1;
 use solana_loader_v4_program::create_program_runtime_environment_v2;
 use solana_program_runtime::compute_budget::ComputeBudget;
@@ -22,12 +23,14 @@ use solana_program_runtime::log_collector::LogCollector;
 use solana_program_runtime::message_processor::MessageProcessor;
 use solana_program_runtime::sysvar_cache::SysvarCache;
 use solana_program_runtime::timings::ExecuteTimings;
-use solana_runtime::accounts::construct_instructions_account;
 use solana_runtime::builtins::BUILTINS;
-use solana_runtime::{bank::TransactionSimulationResult, runtime_config::RuntimeConfig};
+use solana_runtime::{
+    bank::{TransactionSimulationResult, PROGRAM_OWNERS_EX},
+    runtime_config::RuntimeConfig,
+};
 use solana_sdk::account::{
     create_account_shared_data_with_fields, AccountSharedData, ReadableAccount,
-    DUMMY_INHERITABLE_ACCOUNT_FIELDS, PROGRAM_OWNERS,
+    DUMMY_INHERITABLE_ACCOUNT_FIELDS, 
 };
 use solana_sdk::account_utils::StateMut;
 use solana_sdk::address_lookup_table::error::AddressLookupError;
@@ -232,7 +235,7 @@ impl SolanaSimulator {
         let mut transaction_accounts = Vec::new();
         for key in tx.message().account_keys().iter() {
             let account = if solana_sdk::sysvar::instructions::check_id(key) {
-                construct_instructions_account(tx.message())
+                construct_instructions_account_ex(tx.message())
             } else {
                 self.accounts_db.get(key).cloned().unwrap_or_default()
             };
@@ -250,7 +253,7 @@ impl SolanaSimulator {
 
         let mut transaction_context = TransactionContext::new(
             transaction_accounts,
-            *rent,
+            Some(*rent),
             compute_budget.max_invoke_stack_height,
             compute_budget.max_instruction_trace_length,
         );
@@ -260,8 +263,15 @@ impl SolanaSimulator {
         let mut modified_programs = LoadedProgramsForTxBatch::new(
             clock.slot,
             loaded_programs.environments.clone(),
-            loaded_programs.upcoming_environments.clone(),
-            loaded_programs.latest_root_epoch,
+            //loaded_programs.upcoming_environments.clone(),
+            //loaded_programs.latest_root_epoch,
+        );
+
+        let mut updated_programs = LoadedProgramsForTxBatch::new(
+            clock.slot,
+            loaded_programs.environments.clone(), //,
+                                                  //loaded_programs.upcoming_environments.clone(),
+                                                  //loaded_programs.latest_root_epoch,
         );
 
         let log_collector =
@@ -269,13 +279,14 @@ impl SolanaSimulator {
 
         let mut units_consumed = 0u64;
 
-        let mut status = MessageProcessor::process_message(
+        let mut status = MessageProcessor::process_message_ex(
             tx.message(),
             &program_indices,
             &mut transaction_context,
             Some(Rc::clone(&log_collector)),
             &loaded_programs,
             &mut modified_programs,
+            &mut updated_programs,
             Arc::clone(&self.feature_set),
             compute_budget,
             &mut ExecuteTimings::default(),
@@ -285,9 +296,9 @@ impl SolanaSimulator {
             &mut units_consumed,
         );
 
-        let inner_instructions = Some(inner_instructions_list_from_instruction_trace(
-            &transaction_context,
-        ));
+        //let inner_instructions = Some(inner_instructions_list_from_instruction_trace(
+        //    &transaction_context,
+        //));
 
         let ExecutionRecord {
             accounts,
@@ -331,7 +342,7 @@ impl SolanaSimulator {
             post_simulation_accounts: accounts,
             units_consumed,
             return_data,
-            inner_instructions,
+            //inner_instructions,
         })
     }
 
@@ -411,14 +422,14 @@ impl SolanaSimulator {
         let mut loaded_programs = LoadedProgramsForTxBatch::new(
             clock.slot,
             program_runtime_environments.clone(),
-            None,
-            clock.epoch,
+            //None,
+            //clock.epoch,
         );
 
         tx.message().account_keys().iter().for_each(|key| {
             if loaded_programs.find(key).is_none() {
                 let account = self.accounts_db.get(key).cloned().unwrap_or_default();
-                if PROGRAM_OWNERS.iter().any(|owner| account.owner() == owner) {
+                if PROGRAM_OWNERS_EX.iter().any(|owner| account.owner() == owner) {
                     let mut load_program_metrics = LoadProgramMetrics {
                         program_id: key.to_string(),
                         ..LoadProgramMetrics::default()
